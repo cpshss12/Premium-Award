@@ -48,7 +48,8 @@
 
         /* Container & Glassmorphism */
         .app-container {
-            max-width: 800px; margin: 40px auto; padding: 30px;
+            max-width: 950px; /* ขยายความกว้าง */
+            margin: 40px auto; padding: 30px;
             background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border); border-radius: 20px;
             box-shadow: var(--glass-shadow); position: relative; z-index: 10;
@@ -111,32 +112,42 @@
         .dashboard-header h2 { font-size: 1.3rem; margin: 0; color: #4a4a4a; }
         .voter-count { background: white; padding: 10px 20px; border-radius: 20px; font-weight: 600; color: #d65a80; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         
+        /* Podium Layout */
         .podium-container {
             display: flex; align-items: flex-end; justify-content: space-between; height: 350px;
-            margin-top: 40px; margin-bottom: 80px; /* เพิ่มพื้นที่ให้ข้อความยาวๆ */
+            margin-top: 60px; margin-bottom: 120px; /* เพิ่มพื้นที่ให้ป้ายอันดับด้านบน และข้อความด้านล่าง */
             border-bottom: 2px solid rgba(255,183,197,0.5); padding-bottom: 10px;
         }
         
         .podium-item {
             width: 18%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-            border-radius: 10px 10px 0 0; position: relative; transition: height 1s ease-out;
+            border-radius: 10px 10px 0 0; position: relative; 
+            transition: height 1s ease-out; /* Smooth transition ตอนข้อมูลอัปเดต */
             box-shadow: inset 0 0 10px rgba(255,255,255,0.5);
         }
         
-        /* เปลี่ยนสีบาร์ให้สวยงามและเรียงตามลำดับ 1-5 (ไม่ต้อง order แล้ว) */
+        /* Bar Colors */
         .podium-item:nth-child(1) { background: linear-gradient(to top, #ffd700, #ffeb73); } 
         .podium-item:nth-child(2) { background: linear-gradient(to top, #c0c0c0, #e0e0e0); }
         .podium-item:nth-child(3) { background: linear-gradient(to top, #cd7f32, #e6a87c); }
         .podium-item:nth-child(4) { background: linear-gradient(to top, #ffb7c5, #ffe4e1); }
         .podium-item:nth-child(5) { background: linear-gradient(to top, #ff9a9e, #fecfef); }
         
-        .podium-score { font-weight: 600; margin-bottom: 5px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        /* Elements inside Podium */
+        .rank-badge {
+            position: absolute; top: -65px; 
+            background: #d65a80; color: white; 
+            padding: 4px 12px; border-radius: 20px; 
+            font-size: 0.85rem; font-weight: 600; 
+            box-shadow: 0 4px 10px rgba(214, 90, 128, 0.3);
+            white-space: nowrap;
+        }
         .podium-icon { position: absolute; top: -35px; font-size: 1.5rem; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .podium-score { font-weight: 600; margin-bottom: 5px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); font-size: 1.1rem;}
         
-        /* ปรับแต่งข้อความด้านล่างให้รองรับตัวอักษรยาว */
         .podium-label { 
-            position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-            margin-top: 15px; width: 140%; text-align: center; 
+            position: absolute; top: 100%; left: 0; 
+            margin-top: 15px; width: 100%; text-align: center; 
             font-size: 0.65rem; color: #555; word-wrap: break-word; line-height: 1.4; 
         }
         
@@ -266,6 +277,7 @@
 
             if(tabId === 'dashboard-tab') {
                 fetchDashboardData();
+                // รีเฟรชทุกๆ 5 วินาที
                 refreshInterval = setInterval(fetchDashboardData, 5000); 
             } else {
                 clearInterval(refreshInterval);
@@ -317,28 +329,55 @@
 
         function renderPodium(ranking) {
             const container = document.getElementById('podium-chart');
-            container.innerHTML = ''; 
             
-            // เปลี่ยนเป็นไอคอนแบบเดียวกัน เนื่องจากไม่ได้จัดอันดับแล้ว
+            // ตรวจสอบว่าเป็นการวาดกราฟครั้งแรกหรือไม่ (ถ้าใช่ children.length จะเป็น 0)
+            const isFirstRender = container.children.length === 0;
+            
+            // --- ระบบคำนวณอันดับ (รองรับอันดับร่วม) ---
+            // ดึงคะแนนทั้งหมดมาหาค่าที่ไม่ซ้ำกัน และเรียงจากมากไปน้อย
+            let scores = ranking.map(item => parseFloat(item.score));
+            let uniqueScores = [...new Set(scores)].sort((a, b) => b - a);
+
             const icons = ['✨', '✨', '✨', '✨', '✨'];
             
             ranking.forEach((item, index) => {
-                let div = document.createElement('div');
-                div.className = 'podium-item';
-                
-                setTimeout(() => {
-                    let heightPercent = (item.score / 5) * 80 + 10;
-                    div.style.height = heightPercent + '%';
-                }, 100);
+                let scoreVal = parseFloat(item.score);
+                // เทียบคะแนนกับ uniqueScores เพื่อหาอันดับ (เริ่มที่อันดับ 1)
+                let rank = uniqueScores.indexOf(scoreVal) + 1; 
+                let scoreStr = scoreVal.toFixed(2);
+                let heightPercent = (scoreVal / 5) * 80 + 10;
 
-                let scoreStr = parseFloat(item.score).toFixed(2);
-                
-                div.innerHTML = `
-                    <div class="podium-icon">${icons[index]}</div>
-                    <div class="podium-score">${scoreStr}</div>
-                    <div class="podium-label">${item.name}</div>
-                `;
-                container.appendChild(div);
+                if (isFirstRender) {
+                    // สร้าง Element ใหม่ (แอนิเมชันจะทำงานจาก 0 ขึ้นไป)
+                    let div = document.createElement('div');
+                    div.className = 'podium-item';
+                    div.id = `podium-bar-${index}`;
+                    
+                    div.innerHTML = `
+                        <div class="rank-badge">อันดับ ${rank}</div>
+                        <div class="podium-icon">${icons[index]}</div>
+                        <div class="podium-score">${scoreStr}</div>
+                        <div class="podium-label">${item.name}</div>
+                    `;
+                    
+                    // ตั้งความสูงเป็น 0 ก่อนเพื่อให้แอนิเมชันเด้งขึ้นมา
+                    div.style.height = '0%';
+                    container.appendChild(div);
+                    
+                    // ดีเลย์นิดนึงให้ CSS ทันวาดก่อนสั่งขยายความสูง
+                    setTimeout(() => {
+                        div.style.height = heightPercent + '%';
+                    }, 50);
+                } else {
+                    // ถ้าวาดกราฟไปแล้ว (จากฟังก์ชัน Auto-refresh) 
+                    // ให้แค่อัปเดตค่าตัวเลขและความสูง "โดยไม่สร้าง Element ใหม่"
+                    let div = document.getElementById(`podium-bar-${index}`);
+                    if(div) {
+                        div.style.height = heightPercent + '%';
+                        div.querySelector('.podium-score').innerText = scoreStr;
+                        div.querySelector('.rank-badge').innerText = `อันดับ ${rank}`;
+                    }
+                }
             });
         }
 
