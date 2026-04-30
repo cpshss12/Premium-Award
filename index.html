@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Award Evaluation</title>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap');
+
+        :root {
+            --primary: #ffb7c5;
+            --secondary: #ffe4e1;
+            --text-dark: #4a4a4a;
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-shadow: 0 8px 32px 0 rgba(255, 183, 197, 0.3);
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Sakura Animation */
+        #sakura-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .petal {
+            position: absolute;
+            background-color: #ffc0cb;
+            border-radius: 15px 15px 15px 0;
+            transform: rotate(45deg);
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { top: -10%; transform: translateX(0) rotate(45deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { top: 110%; transform: translateX(100px) rotate(225deg); opacity: 0; }
+        }
+
+        /* Container & Glassmorphism */
+        .app-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--glass-shadow);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header & Logo */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .floating-logo {
+            font-size: 3rem;
+            color: #ff8eaf;
+            animation: float 3s ease-in-out infinite;
+            margin-bottom: 10px;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .header h1 { font-size: 1.5rem; margin: 0 0 10px 0; color: #d65a80; }
+        .header p { font-size: 0.9rem; color: #666; }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .tab-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.5);
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Pages */
+        .page { display: none; animation: fadeIn 0.5s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Form Styles */
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; }
+        input[type="text"], select {
+            width: 100%; padding: 12px; border: 1px solid rgba(255,183,197,0.5);
+            border-radius: 10px; background: rgba(255,255,255,0.8);
+            font-family: inherit; font-size: 1rem; box-sizing: border-box;
+            transition: all 0.3s;
+        }
+        input[type="text"]:focus, select:focus { outline: none; border-color: #ff8eaf; box-shadow: 0 0 10px rgba(255,142,175,0.2); }
+        
+        /* Rating Group */
+        .rating-group {
+            background: rgba(255,255,255,0.4); padding: 15px; border-radius: 15px; margin-bottom: 15px;
+        }
+        .rating-title { margin-bottom: 10px; font-weight: 500; color: #d65a80; }
+        .rating-options { display: flex; justify-content: space-between; gap: 5px; }
+        .rating-options label {
+            flex: 1; text-align: center; background: rgba(255,255,255,0.8);
+            padding: 10px 0; border-radius: 8px; cursor: pointer; transition: 0.2s;
+            border: 1px solid transparent; font-size: 0.9rem;
+        }
+        .rating-options input { display: none; }
+        .rating-options input:checked + label {
+            background: var(--primary); color: white; border-color: #ff8eaf;
+        }
+
+        .submit-btn {
+            width: 100%; padding: 15px; border: none; border-radius: 10px;
+            background: linear-gradient(45deg, #ff8eaf, #ffb7c5); color: white;
+            font-size: 1.2rem; font-family: inherit; font-weight: 600; cursor: pointer;
+            transition: transform 0.2s; margin-top: 20px;
+        }
+        .submit-btn:hover { transform: scale(1.02); }
+
+        /* Thank you screen */
+        #thank-you-screen { text-align: center; padding: 40px 20px; display: none; }
+        #thank-you-screen i { font-size: 5rem; color: #ff8eaf; margin-bottom: 20px; animation: float 3s infinite; }
+
+        /* Dashboard Styles */
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .voter-count { background: white; padding: 10px 20px; border-radius: 20px; font-weight: 600; color: #d65a80; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        
+        .podium-container {
+            display: flex; align-items: flex-end; justify-content: center; height: 350px;
+            gap: 10px; margin-top: 40px; border-bottom: 2px solid rgba(255,183,197,0.5); padding-bottom: 10px;
+        }
+        .podium-item {
+            width: 18%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+            background: linear-gradient(to top, rgba(255,183,197,0.8), rgba(255,228,225,0.9));
+            border-radius: 10px 10px 0 0; position: relative; transition: height 1s ease-out;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.5);
+        }
+        .podium-item:nth-child(1) { order: 2; height: 10%; background: linear-gradient(to top, #ffd700, #ffeb73); } /* Rank 1 */
+        .podium-item:nth-child(2) { order: 1; height: 10%; background: linear-gradient(to top, #c0c0c0, #e0e0e0); } /* Rank 2 */
+        .podium-item:nth-child(3) { order: 3; height: 10%; background: linear-gradient(to top, #cd7f32, #e6a87c); } /* Rank 3 */
+        .podium-item:nth-child(4) { order: 4; height: 10%; } /* Rank 4 */
+        .podium-item:nth-child(5) { order: 5; height: 10%; } /* Rank 5 */
+        
+        .podium-score { font-weight: 600; margin-bottom: 5px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .podium-label { position: absolute; bottom: -45px; text-align: center; font-size: 0.75rem; width: 120%; color: #555; word-wrap: break-word; line-height: 1.2; }
+        .podium-icon { position: absolute; top: -35px; font-size: 1.5rem; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        
+        /* Cute Mascot Animation */
+        .mascot {
+            position: absolute; bottom: 20px; right: 20px; font-size: 3rem;
+            animation: bounce 2s infinite; z-index: 20;
+        }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        
+        /* Loading overlay for form */
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.7); display: none; justify-content: center;
+            align-items: center; border-radius: 20px; z-index: 50;
+        }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="sakura-container"></div>
+
+    <div class="app-container">
+        <div class="header">
+            <div class="floating-logo"><i class="fa-solid fa-seedling"></i></div>
+            <h1>แบบประเมินเกณฑ์รางวัลระดับ Premium Award</h1>
+            <p>เพื่อชี้เป้าจุดแข็ง และค้นหาช่องว่างของสถานประกอบการเพื่อสุขภาพ</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('form-tab', this)">แบบประเมิน</button>
+            <button class="tab-btn" onclick="switchTab('dashboard-tab', this)">สรุปคะแนน</button>
+        </div>
+
+        <!-- TAB 1: FORM -->
+        <div id="form-tab" class="page active">
+            <div class="overlay" id="loading-overlay"><div class="spinner"></div></div>
+            <form id="evalForm">
+                <div class="form-group">
+                    <label>1. ชื่อ - สกุล</label>
+                    <input type="text" name="name" required placeholder="เช่น นายต้นกล้า ใจดี">
+                </div>
+                <div class="form-group">
+                    <label>2. ตำเเหน่ง</label>
+                    <select name="position" required>
+                        <option value="" disabled selected>-- กรุณาเลือกตำแหน่ง --</option>
+                        <option value="ผู้ประกอบการฯ">ผู้ประกอบการฯ</option>
+                        <option value="ตัวเเทนสถานประกอบการฯ">ตัวเเทนสถานประกอบการฯ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>3. ชื่อสถานประกอบการฯ</label>
+                    <input type="text" name="company" required placeholder="ระบุชื่อสถานประกอบการ">
+                </div>
+
+                <div class="form-group">
+                    <label>4. ประเมินเกณฑ์แต่ละด้าน (1 = น้อยสุด, 5 = มากสุด)</label>
+                    
+                    <!-- ด้าน 1-5 -->
+                    <div id="rating-container"></div>
+                </div>
+
+                <button type="submit" class="submit-btn"><i class="fa-solid fa-paper-plane"></i> ส่งแบบประเมิน</button>
+            </form>
+
+            <div id="thank-you-screen">
+                <i class="fa-solid fa-circle-check"></i>
+                <h2>ขอบคุณที่ร่วมประเมิน!</h2>
+                <p>ข้อมูลของคุณถูกบันทึกเรียบร้อยแล้ว</p>
+                <button class="submit-btn" style="width: auto; padding: 10px 30px;" onclick="resetForm()">กลับไปหน้าแรก</button>
+            </div>
+        </div>
+
+        <!-- TAB 2: DASHBOARD -->
+        <div id="dashboard-tab" class="page">
+            <div class="dashboard-header">
+                <h2>🏆 Top 5 จุดแข็งสถานประกอบการ</h2>
+                <div class="voter-count">ผู้ร่วมโหวต: <span id="total-voters">0</span> คน</div>
+            </div>
+            
+            <div class="podium-container" id="podium-chart">
+                <!-- Podium Items will be injected by JS -->
+            </div>
+            
+            <div class="mascot">👩‍💻✨</div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 🚨 CONFIGURATION 🚨
+        // ใส่ URL ที่ได้จาก Google Apps Script
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzt_5BoxdtWxEw_uNPYCOqBb-fwEiZ-UKz0Adfz003eIfTjzpuGEX4e3kOVTLs9Qamy/exec"; 
+        // ==========================================
+
+        const categories = [
+            { id: 's1', name: 'บริการเเละประสบการณ์' },
+            { id: 's2', name: 'ความปลอดภัยเเละสุขอนามัย' },
+            { id: 's3', name: 'บุคลากรเเละวิชาชีพ' },
+            { id: 's4', name: 'สถานที่เเละสิ่งเเวดล้อม' },
+            { id: 's5', name: 'การบริหารจัดการเเละการพัฒนา' }
+        ];
+
+        // 1. Sakura Petal Generator
+        function createSakura() {
+            const container = document.getElementById('sakura-container');
+            for(let i=0; i<30; i++) {
+                let petal = document.createElement('div');
+                petal.classList.add('petal');
+                petal.style.left = Math.random() * 100 + 'vw';
+                petal.style.width = Math.random() * 10 + 5 + 'px';
+                petal.style.height = Math.random() * 15 + 10 + 'px';
+                petal.style.animationDuration = Math.random() * 3 + 4 + 's';
+                petal.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(petal);
+            }
+        }
+
+        // 2. Render Form Ratings
+        function renderRatingGroup() {
+            const container = document.getElementById('rating-container');
+            let html = '';
+            categories.forEach(cat => {
+                html += `
+                <div class="rating-group">
+                    <div class="rating-title">${cat.name}</div>
+                    <div class="rating-options">
+                        ${[1,2,3,4,5].map(num => `
+                            <input type="radio" id="${cat.id}_${num}" name="${cat.id}" value="${num}" required>
+                            <label for="${cat.id}_${num}">${num}</label>
+                        `).join('')}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // 3. Tab Switching
+        let refreshInterval;
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+
+            if(tabId === 'dashboard-tab') {
+                fetchDashboardData();
+                refreshInterval = setInterval(fetchDashboardData, 5000); // Auto refresh 5 sec
+            } else {
+                clearInterval(refreshInterval);
+            }
+        }
+
+        // 4. Form Submit Handler
+        document.getElementById('evalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if(!GAS_URL || GAS_URL.includes("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE")) {
+                Swal.fire('ข้อผิดพลาด', 'กรุณาตรวจสอบ URL ของ GAS อีกครั้ง', 'error'); return;
+            }
+
+            document.getElementById('loading-overlay').style.display = 'flex';
+            const formData = new FormData(this);
+            const data = new URLSearchParams(formData);
+
+            fetch(GAS_URL, { method: 'POST', body: data })
+            .then(res => res.json())
+            .then(result => {
+                document.getElementById('loading-overlay').style.display = 'none';
+                Swal.fire({
+                    title: 'สำเร็จ!', text: 'บันทึกข้อมูลการประเมินเรียบร้อย',
+                    icon: 'success', confirmButtonColor: '#ff8eaf'
+                }).then(() => {
+                    document.getElementById('evalForm').style.display = 'none';
+                    document.getElementById('thank-you-screen').style.display = 'block';
+                });
+            })
+            .catch(error => {
+                document.getElementById('loading-overlay').style.display = 'none';
+                Swal.fire('สำเร็จ!', 'ส่งข้อมูลสำเร็จเรียบร้อย', 'success').then(()=>{
+                    document.getElementById('evalForm').style.display = 'none';
+                    document.getElementById('thank-you-screen').style.display = 'block';
+                });
+            });
+        });
+
+        function resetForm() {
+            document.getElementById('evalForm').reset();
+            document.getElementById('evalForm').style.display = 'block';
+            document.getElementById('thank-you-screen').style.display = 'none';
+        }
+
+        // 5. Dashboard Logic (Auto-refresh & Podium)
+        function fetchDashboardData() {
+            if(!GAS_URL || GAS_URL.includes("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE")) return;
+            
+            fetch(GAS_URL)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('total-voters').innerText = data.totalVotes;
+                renderPodium(data.ranking);
+            })
+            .catch(err => console.log('Fetch error:', err));
+        }
+
+        function renderPodium(ranking) {
+            const container = document.getElementById('podium-chart');
+            container.innerHTML = ''; // clear old
+            
+            const icons = ['👑', '🥈', '🥉', '✨', '⭐'];
+            
+            // max score is 5, map height to percentage (min 20%, max 90%)
+            ranking.forEach((item, index) => {
+                let div = document.createElement('div');
+                div.className = 'podium-item';
+                
+                // Animate height dynamically
+                setTimeout(() => {
+                    let heightPercent = (item.score / 5) * 80 + 10;
+                    div.style.height = heightPercent + '%';
+                }, 100);
+
+                let scoreStr = parseFloat(item.score).toFixed(2);
+                
+                div.innerHTML = `
+                    <div class="podium-icon">${icons[index]}</div>
+                    <div class="podium-score">${scoreStr}</div>
+                    <div class="podium-label">${item.name}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Init
+        createSakura();
+        renderRatingGroup();
+    </script>
+</body>
+</html>
