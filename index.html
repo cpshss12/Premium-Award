@@ -33,19 +33,12 @@
 
         /* Sakura Animation */
         #sakura-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
         }
         .petal {
-            position: absolute;
-            background-color: #ffc0cb;
-            border-radius: 15px 15px 15px 0;
-            transform: rotate(45deg);
-            opacity: 0.7;
-            animation: fall linear infinite;
+            position: absolute; background-color: #ffc0cb; border-radius: 15px 15px 15px 0;
+            transform: rotate(45deg); opacity: 0.7; animation: fall linear infinite;
         }
         @keyframes fall {
             0% { top: -10%; transform: translateX(0) rotate(45deg); opacity: 0; }
@@ -55,61 +48,27 @@
 
         /* Container & Glassmorphism */
         .app-container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 30px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: var(--glass-shadow);
-            position: relative;
-            z-index: 10;
+            max-width: 800px; margin: 40px auto; padding: 30px;
+            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            box-shadow: var(--glass-shadow); position: relative; z-index: 10;
         }
 
         /* Header & Logo */
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .floating-logo {
-            font-size: 3rem;
-            color: #ff8eaf;
-            animation: float 3s ease-in-out infinite;
-            margin-bottom: 10px;
-        }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
+        .header { text-align: center; margin-bottom: 30px; }
+        .floating-logo { font-size: 3rem; color: #ff8eaf; animation: float 3s ease-in-out infinite; margin-bottom: 10px; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
         .header h1 { font-size: 1.5rem; margin: 0 0 10px 0; color: #d65a80; }
         .header p { font-size: 0.9rem; color: #666; }
 
         /* Tabs */
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
+        .tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
         .tab-btn {
-            padding: 10px 25px;
-            border: none;
-            border-radius: 50px;
-            background: rgba(255,255,255,0.5);
-            font-family: inherit;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            padding: 10px 25px; border: none; border-radius: 50px; background: rgba(255,255,255,0.5);
+            font-family: inherit; font-size: 1rem; cursor: pointer; transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
-            font-weight: 500;
-        }
+        .tab-btn.active { background: var(--primary); color: white; font-weight: 500; }
 
         /* Pages */
         .page { display: none; animation: fadeIn 0.5s ease; }
@@ -122,26 +81,19 @@
         input[type="text"], select {
             width: 100%; padding: 12px; border: 1px solid rgba(255,183,197,0.5);
             border-radius: 10px; background: rgba(255,255,255,0.8);
-            font-family: inherit; font-size: 1rem; box-sizing: border-box;
-            transition: all 0.3s;
+            font-family: inherit; font-size: 1rem; box-sizing: border-box; transition: all 0.3s;
         }
         input[type="text"]:focus, select:focus { outline: none; border-color: #ff8eaf; box-shadow: 0 0 10px rgba(255,142,175,0.2); }
         
-        /* Rating Group */
-        .rating-group {
-            background: rgba(255,255,255,0.4); padding: 15px; border-radius: 15px; margin-bottom: 15px;
-        }
-        .rating-title { margin-bottom: 10px; font-weight: 500; color: #d65a80; }
+        .rating-group { background: rgba(255,255,255,0.4); padding: 15px; border-radius: 15px; margin-bottom: 15px; }
+        .rating-title { margin-bottom: 10px; font-weight: 500; color: #d65a80; font-size: 0.95rem; }
         .rating-options { display: flex; justify-content: space-between; gap: 5px; }
         .rating-options label {
-            flex: 1; text-align: center; background: rgba(255,255,255,0.8);
-            padding: 10px 0; border-radius: 8px; cursor: pointer; transition: 0.2s;
-            border: 1px solid transparent; font-size: 0.9rem;
+            flex: 1; text-align: center; background: rgba(255,255,255,0.8); padding: 10px 0;
+            border-radius: 8px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; font-size: 0.9rem;
         }
         .rating-options input { display: none; }
-        .rating-options input:checked + label {
-            background: var(--primary); color: white; border-color: #ff8eaf;
-        }
+        .rating-options input:checked + label { background: var(--primary); color: white; border-color: #ff8eaf; }
 
         .submit-btn {
             width: 100%; padding: 15px; border: none; border-radius: 10px;
@@ -151,42 +103,43 @@
         }
         .submit-btn:hover { transform: scale(1.02); }
 
-        /* Thank you screen */
         #thank-you-screen { text-align: center; padding: 40px 20px; display: none; }
         #thank-you-screen i { font-size: 5rem; color: #ff8eaf; margin-bottom: 20px; animation: float 3s infinite; }
 
         /* Dashboard Styles */
         .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .dashboard-header h2 { font-size: 1.3rem; margin: 0; color: #4a4a4a; }
         .voter-count { background: white; padding: 10px 20px; border-radius: 20px; font-weight: 600; color: #d65a80; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         
         .podium-container {
-            display: flex; align-items: flex-end; justify-content: center; height: 350px;
-            gap: 10px; margin-top: 40px; border-bottom: 2px solid rgba(255,183,197,0.5); padding-bottom: 10px;
+            display: flex; align-items: flex-end; justify-content: space-between; height: 350px;
+            margin-top: 40px; margin-bottom: 80px; /* เพิ่มพื้นที่ให้ข้อความยาวๆ */
+            border-bottom: 2px solid rgba(255,183,197,0.5); padding-bottom: 10px;
         }
+        
         .podium-item {
             width: 18%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-            background: linear-gradient(to top, rgba(255,183,197,0.8), rgba(255,228,225,0.9));
             border-radius: 10px 10px 0 0; position: relative; transition: height 1s ease-out;
             box-shadow: inset 0 0 10px rgba(255,255,255,0.5);
         }
-        .podium-item:nth-child(1) { order: 2; height: 10%; background: linear-gradient(to top, #ffd700, #ffeb73); } /* Rank 1 */
-        .podium-item:nth-child(2) { order: 1; height: 10%; background: linear-gradient(to top, #c0c0c0, #e0e0e0); } /* Rank 2 */
-        .podium-item:nth-child(3) { order: 3; height: 10%; background: linear-gradient(to top, #cd7f32, #e6a87c); } /* Rank 3 */
-        .podium-item:nth-child(4) { order: 4; height: 10%; } /* Rank 4 */
-        .podium-item:nth-child(5) { order: 5; height: 10%; } /* Rank 5 */
+        
+        /* เปลี่ยนสีบาร์ให้สวยงามและเรียงตามลำดับ 1-5 (ไม่ต้อง order แล้ว) */
+        .podium-item:nth-child(1) { background: linear-gradient(to top, #ffd700, #ffeb73); } 
+        .podium-item:nth-child(2) { background: linear-gradient(to top, #c0c0c0, #e0e0e0); }
+        .podium-item:nth-child(3) { background: linear-gradient(to top, #cd7f32, #e6a87c); }
+        .podium-item:nth-child(4) { background: linear-gradient(to top, #ffb7c5, #ffe4e1); }
+        .podium-item:nth-child(5) { background: linear-gradient(to top, #ff9a9e, #fecfef); }
         
         .podium-score { font-weight: 600; margin-bottom: 5px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
-        .podium-label { position: absolute; bottom: -45px; text-align: center; font-size: 0.75rem; width: 120%; color: #555; word-wrap: break-word; line-height: 1.2; }
         .podium-icon { position: absolute; top: -35px; font-size: 1.5rem; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         
-        /* Cute Mascot Animation */
-        .mascot {
-            position: absolute; bottom: 20px; right: 20px; font-size: 3rem;
-            animation: bounce 2s infinite; z-index: 20;
+        /* ปรับแต่งข้อความด้านล่างให้รองรับตัวอักษรยาว */
+        .podium-label { 
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+            margin-top: 15px; width: 140%; text-align: center; 
+            font-size: 0.65rem; color: #555; word-wrap: break-word; line-height: 1.4; 
         }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         
-        /* Loading overlay for form */
         .overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255,255,255,0.7); display: none; justify-content: center;
@@ -212,7 +165,6 @@
             <button class="tab-btn" onclick="switchTab('dashboard-tab', this)">สรุปคะแนน</button>
         </div>
 
-        <!-- TAB 1: FORM -->
         <div id="form-tab" class="page active">
             <div class="overlay" id="loading-overlay"><div class="spinner"></div></div>
             <form id="evalForm">
@@ -235,8 +187,6 @@
 
                 <div class="form-group">
                     <label>4. ประเมินเกณฑ์แต่ละด้าน (1 = น้อยสุด, 5 = มากสุด)</label>
-                    
-                    <!-- ด้าน 1-5 -->
                     <div id="rating-container"></div>
                 </div>
 
@@ -251,37 +201,30 @@
             </div>
         </div>
 
-        <!-- TAB 2: DASHBOARD -->
         <div id="dashboard-tab" class="page">
             <div class="dashboard-header">
-                <h2>🏆 Top 5 จุดแข็งสถานประกอบการ</h2>
+                <h2>📊 สรุปคะแนนตามเกณฑ์</h2>
                 <div class="voter-count">ผู้ร่วมโหวต: <span id="total-voters">0</span> คน</div>
             </div>
             
-            <div class="podium-container" id="podium-chart">
-                <!-- Podium Items will be injected by JS -->
-            </div>
-            
-            <div class="mascot">👩‍💻✨</div>
+            <div class="podium-container" id="podium-chart"></div>
         </div>
     </div>
 
     <script>
         // ==========================================
         // 🚨 CONFIGURATION 🚨
-        // ใส่ URL ที่ได้จาก Google Apps Script
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzt_5BoxdtWxEw_uNPYCOqBb-fwEiZ-UKz0Adfz003eIfTjzpuGEX4e3kOVTLs9Qamy/exec"; 
         // ==========================================
 
         const categories = [
-            { id: 's1', name: 'บริการเเละประสบการณ์' },
-            { id: 's2', name: 'ความปลอดภัยเเละสุขอนามัย' },
-            { id: 's3', name: 'บุคลากรเเละวิชาชีพ' },
-            { id: 's4', name: 'สถานที่เเละสิ่งเเวดล้อม' },
-            { id: 's5', name: 'การบริหารจัดการเเละการพัฒนา' }
+            { id: 's1', name: 'ด้านที่ 1 บริการเเละประสบการณ์ (Service & Experience)' },
+            { id: 's2', name: 'ด้านที่ 2 ความปลอดภัยเเละสุขอนามัย (Safety & Hygiene)' },
+            { id: 's3', name: 'ด้านที่ 3 บุคลากรเเละวิชาชีพ (HR & Professionalism)' },
+            { id: 's4', name: 'ด้านที่ 4 สถานที่เเละสิ่งเเวดล้อม (Facilities & Environment)' },
+            { id: 's5', name: 'ด้านที่ 5 ด้านการบริหารจัดการเเละการพัฒนา (Management and Development)' }
         ];
 
-        // 1. Sakura Petal Generator
         function createSakura() {
             const container = document.getElementById('sakura-container');
             for(let i=0; i<30; i++) {
@@ -296,7 +239,6 @@
             }
         }
 
-        // 2. Render Form Ratings
         function renderRatingGroup() {
             const container = document.getElementById('rating-container');
             let html = '';
@@ -315,7 +257,6 @@
             container.innerHTML = html;
         }
 
-        // 3. Tab Switching
         let refreshInterval;
         function switchTab(tabId, btnElement) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
@@ -325,19 +266,14 @@
 
             if(tabId === 'dashboard-tab') {
                 fetchDashboardData();
-                refreshInterval = setInterval(fetchDashboardData, 5000); // Auto refresh 5 sec
+                refreshInterval = setInterval(fetchDashboardData, 5000); 
             } else {
                 clearInterval(refreshInterval);
             }
         }
 
-        // 4. Form Submit Handler
         document.getElementById('evalForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            if(!GAS_URL || GAS_URL.includes("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE")) {
-                Swal.fire('ข้อผิดพลาด', 'กรุณาตรวจสอบ URL ของ GAS อีกครั้ง', 'error'); return;
-            }
-
             document.getElementById('loading-overlay').style.display = 'flex';
             const formData = new FormData(this);
             const data = new URLSearchParams(formData);
@@ -369,10 +305,7 @@
             document.getElementById('thank-you-screen').style.display = 'none';
         }
 
-        // 5. Dashboard Logic (Auto-refresh & Podium)
         function fetchDashboardData() {
-            if(!GAS_URL || GAS_URL.includes("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE")) return;
-            
             fetch(GAS_URL)
             .then(res => res.json())
             .then(data => {
@@ -384,16 +317,15 @@
 
         function renderPodium(ranking) {
             const container = document.getElementById('podium-chart');
-            container.innerHTML = ''; // clear old
+            container.innerHTML = ''; 
             
-            const icons = ['👑', '🥈', '🥉', '✨', '⭐'];
+            // เปลี่ยนเป็นไอคอนแบบเดียวกัน เนื่องจากไม่ได้จัดอันดับแล้ว
+            const icons = ['✨', '✨', '✨', '✨', '✨'];
             
-            // max score is 5, map height to percentage (min 20%, max 90%)
             ranking.forEach((item, index) => {
                 let div = document.createElement('div');
                 div.className = 'podium-item';
                 
-                // Animate height dynamically
                 setTimeout(() => {
                     let heightPercent = (item.score / 5) * 80 + 10;
                     div.style.height = heightPercent + '%';
@@ -410,7 +342,6 @@
             });
         }
 
-        // Init
         createSakura();
         renderRatingGroup();
     </script>
